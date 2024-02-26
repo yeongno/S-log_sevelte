@@ -1,4 +1,6 @@
 <script>
+  // @ts-nocheck
+
   import { router } from "tinro";
   import { auth, isLogin } from "../stores";
 

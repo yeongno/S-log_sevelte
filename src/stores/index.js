@@ -28,6 +28,8 @@ const setArticles = () => {
     const { subscribe, update, set } = writable({ ...initValues })
     
     const fetchArticles = async () => {
+
+        loadingArticle.turnOnLoading()
         const currentPage = get(currentArticlesPage)
         let path = `/articles/?pageNumber=${currentPage}`
 
@@ -59,16 +61,18 @@ const setArticles = () => {
 
                 return datas
             })
+            loadingArticle.turnOffLoading()
         }
         catch (err) {
+            loadingArticle.turnOffLoading()
             throw err
         }
      }
     const resetArticles = () => {
         set({ ...initValues })
         currentArticlesPage.resetPage()
+        articlePageLock.set(false)
     }
-    //todo 게시글 목록 구현 8:35
 
     return {
         subscribe,
@@ -78,7 +82,21 @@ const setArticles = () => {
 }
 
 const setLoadingArticle = () => {
-    
+    const { subscribe, set } = writable(false)
+    const turnOnLoading = () => {
+        set(true)
+        articlePageLock.set(true)
+    }
+    const turnOffLoading = () => {
+        set(false)
+        articlePageLock.set(false)
+    }
+
+    return {
+        subscribe,
+        turnOnLoading,
+        turnOffLoading,
+    }
 }
 
 const setArticleContent = () => {
@@ -199,6 +217,7 @@ const setIsLogin = () => {
 
 export const currentArticlesPage = setCurrentArticlesPage()
 export const articles = setArticles()
+export const articlePageLock = writable(false)
 export const loadingArticle = setLoadingArticle()
 export const articleContent = setArticleContent()
 export const comments = setComments()

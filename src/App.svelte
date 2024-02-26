@@ -8,7 +8,7 @@
   onMount(() => {
     const onRefresh = setInterval(() => {
       if ($isRefresh) {
-        auth.refresh();
+        // auth.refresh();
       } else {
         clearInterval(onRefresh);
       }

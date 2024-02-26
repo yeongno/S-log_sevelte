@@ -2,14 +2,16 @@
   function handleClick() {
     window.location.href = "#"; // 원하는 URL로 변경
   }
+
+  export let article;
 </script>
 
 <!-- slog-content-box start-->
 <div class="slog-content-box">
   <div class="content-box-header">
     <div class="content-box-header-inner-left">
-      <p class="p-user">freeseamew</p>
-      <p class="p-date">2022-11-1</p>
+      <p class="p-user">{article.userEmail}</p>
+      <p class="p-date">{article.createdAt}</p>
     </div>
     <div class="content-box-header-inner-right">
       <button class="button-base-circle">
@@ -19,7 +21,7 @@
           ></path></svg
         >
       </button>
-      <div class="drop-menu-box block">
+      <!-- <div class="drop-menu-box block">
         <ul>
           <li>
             <button on:click={handleClick} class="drop-menu-button">수정</button
@@ -30,17 +32,13 @@
             >
           </li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </div>
 
   <div class="content-box-main">
     <p class="whitespace-pre-line">
-      Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat
-      eu. Nostrud in laboris labore nisi amet do dolor eu fugiat consectetur
-      elit cillum esse. Pariatur occaecat nisi laboris tempor laboris eiusmod
-      qui id Lorem esse commodo in. Exercitation aute dolore deserunt culpa
-      consequat elit labore incididunt elit anim.
+      {article.content}
     </p>
   </div>
 
@@ -56,7 +54,7 @@
             d="M12 4.595a5.904 5.904 0 0 0-3.996-1.558 5.942 5.942 0 0 0-4.213 1.758c-2.353 2.363-2.352 6.059.002 8.412l7.332 7.332c.17.299.498.492.875.492a.99.99 0 0 0 .792-.409l7.415-7.415c2.354-2.354 2.354-6.049-.002-8.416a5.938 5.938 0 0 0-4.209-1.754A5.906 5.906 0 0 0 12 4.595zm6.791 1.61c1.563 1.571 1.564 4.025.002 5.588L12 18.586l-6.793-6.793c-1.562-1.563-1.561-4.017-.002-5.584.76-.756 1.754-1.172 2.799-1.172s2.035.416 2.789 1.17l.5.5a.999.999 0 0 0 1.414 0l.5-.5c1.512-1.509 4.074-1.505 5.584-.002z"
           ></path>
         </svg>
-        <p class="text-base">10</p>
+        <p class="text-base">{article.likeCount}</p>
       </button>
       <!-- 아래는 likeMe true
                       <button class="flex">
@@ -68,7 +66,7 @@
     </div>
     <div class="button-box-inner-right">
       <button on:click={handleClick} class="flex">
-        <p class="text-base">10</p>
+        <p class="text-base">{article.commentCount}</p>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
