@@ -2,6 +2,7 @@
 module.exports = {
   // content: ["dist/index.html"],
   content: ["./dist/**/*.{html,js}"],
+  // content: ["./src/**/*.{html,js,svelte}"],
   // content: ["./src/**/*.{html,js}"],
   theme: {
     extend: {
