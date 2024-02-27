@@ -1,12 +1,24 @@
+<script>
+  export let comment;
+  export let articleId;
+  import { comments, auth } from "../stores";
+
+  const onDeleteComment = () => {
+    if (confirm("삭제하겠습니까?")) {
+      comments.deleteComment(comment.id, articleId);
+    }
+  };
+</script>
+
 <!-- comment start-->
 <li>
   <div class="comment-top">
     <div class="comment-top-left">
-      <p class="p-user">freeseamew</p>
-      <p class="p-date-comment">2022-11-11</p>
+      <p class="p-user">{comment.userEmail}</p>
+      <p class="p-date-comment">{comment.createdAt}</p>
     </div>
     <div class="comment-top-right">
-      <button>
+      <button on:click={onDeleteComment}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -20,7 +32,7 @@
   </div>
   <div class="comment-bottom">
     <p class="whitespace-pre-line">
-      안녕하세요. 첫번째 코멘트 입니다. 여러분의 생각을 적어주세요.
+      {comment.content}
     </p>
   </div>
 </li>

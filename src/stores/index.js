@@ -1,6 +1,6 @@
 import { writable, get, derived } from 'svelte/store'
 import {getApi, putApi, delApi, postApi} from '../service/api.js'
-import {router} from 'tinro'
+import { router } from 'tinro'
 
 const setCurrentArticlesPage = () => {
     const { subscribe, update, set } = writable(1)
@@ -190,6 +190,32 @@ const setArticles = () => {
         }
     }
 
+    const increArticleCommentCount = (articleId) => {
+        update(datas => {
+            const newArticleList = datas.articleList.map(article => {
+                if (article.id === articleId) {
+                    article.commentCount = article.commentCount + 1
+                }
+                return article
+            })
+            datas.articleList = newArticleList
+            return datas
+        })
+    }
+
+    const decreArticleCommentCount = (articleId) => {
+        update(datas => {
+            const newArticleList = datas.articleList.map(article => {
+                if (article.id === articleId) {
+                    article.commentCount = article.commentCount - 1
+                }
+                return article
+            })
+            datas.articleList = newArticleList
+            return datas
+        })
+    }
+
     return {
         subscribe,
         fetchArticles,
@@ -201,6 +227,8 @@ const setArticles = () => {
         closeEditModeArticle,
         updateArticle,
         deleteArticle,
+        increArticleCommentCount,
+        decreArticleCommentCount,
     }
 }
 
@@ -223,11 +251,107 @@ const setLoadingArticle = () => {
 }
 
 const setArticleContent = () => {
+    let initValues = {
+        id: '',
+        userId: '',
+        userEmail: '',
+        content: '',
+        createdAt: '',
+        commentCount: 0,
+        likeCount: 0,
+        likeUsers:[],
+    }
+
+    const { subscribe, set } = writable({ ...initValues })
     
+    const getArticle = async (id) => {
+        try {
+            const options = {
+                path:`/articles/${id}`
+            }
+
+            const getData = await getApi(options)
+            set(getData)
+        }
+        catch (err) {
+            alert('오류가 발생했습니다. 다시 시도해 주세요.')
+        }
+    }
+
+    return {
+        subscribe,
+        getArticle,
+    }
 }
 
 const setComments = () => {
+    const { subscribe, update, set } = writable({})
     
+    const fetchComments = async (id) => {
+        try {
+            const options = {
+                path:`/comments/${id}`
+            }
+
+            const getDatas = await getApi(options)
+            set(getDatas.comments)
+        }
+        catch (err) {
+            alert('오류가 발생했습니다. 다시 시도해 주세요.')
+        }
+     }
+    const addComment = async (articleId, commentContent) => {
+        const access_token = get(auth).Authorization
+
+        try {
+            const options = {
+                path: '/comments',
+                data: {
+                    articleId: articleId,
+                    content: commentContent,
+                },
+                access_token: access_token
+            }
+
+            const newData = await postApi(options)
+            // @ts-ignore
+            update(datas => [...datas, newData])
+            articles.increArticleCommentCount(articleId)
+        }
+        catch (err) {
+            alert('오류가 발생했습니다. 다시 시도해 주세요.')
+        }
+     }
+    const deleteComment = async (commentId, articleId) => { 
+        const access_token = get(auth).Authorization
+
+        try {
+            const options = {
+                path: '/comments',
+                data: {
+                    commentId: commentId,
+                    articleId: articleId,
+                },
+                access_token: access_token,
+            }
+
+            await delApi(options)
+            // @ts-ignore
+            update(datas => datas.filter(comment => comment.id !== commentId))
+            articles.decreArticleCommentCount(articleId)
+            alert('커멘트가 삭제 되었습니다.')
+        }
+        catch (err) {
+            alert('삭제 중 오류가 발생했습니다. 다시 시도해 주세요.')
+        }
+    }
+
+    return {
+        subscribe,
+        fetchComments,
+        addComment,
+        deleteComment,
+    }
 }
 
 const setAuth = () => {

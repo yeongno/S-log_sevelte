@@ -14,7 +14,7 @@
 
 <!-- start header -->
 <header class="main-header">
-  <p class="p-main-title">SLogs</p>
+  <a class="p-main-title" href="/">SLogs</a>
   <nav class="main-nav">
     <button class=" main-menu main-menu-selected mr-6">모두 보기</button>
     <button class="main-menu mr-6">좋아요 보기</button>

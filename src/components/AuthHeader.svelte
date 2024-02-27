@@ -7,7 +7,7 @@
 
 <!-- main-header start -->
 <header class="main-header">
-  <p class="p-main-title">SLogs</p>
+  <a class="p-main-title" href="/">SLogs</a>
   <nav class="main-nav">
     <a
       href="/login"
