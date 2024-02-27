@@ -216,6 +216,59 @@ const setArticles = () => {
         })
     }
 
+    const likeArticle = async (articleId) => {
+        const access_token = get(auth).Authorization
+        
+        try {
+            const options = {
+                path: `/likes/add/${articleId}`,
+                access_token: access_token,
+            }
+                    await postApi(options)
+
+        update(datas => {
+            const newArticles = datas.articleList.map(article => {
+                if (article.id === articleId) {
+                    article.likeCount = article.likeCount + 1
+                    article.likeMe = true
+                }
+                return article
+            })
+            datas.articleList = newArticles
+            return datas
+        })
+        }
+        catch (err) {
+            alert('오류가 발생했습니다. 다시 시도해 주세요.')
+        }
+    }
+
+    const cancelLikeArticle = async (articleId) => {
+        const access_token = get(auth).Authorization
+
+        try {
+            const options = {
+                path: `/likes/cancel/${articleId}`,
+                access_token: access_token,
+            }
+            await postApi(options)
+
+            update(datas => {
+                const newArticles = datas.articleList.map(article => {
+                    if (article.id === articleId) {
+                        article.likeCount = article.likeCount - 1
+                        article.likeMe = false
+                    }
+                    return article
+                })
+                datas.articleList = newArticles
+                return datas
+            })
+        }
+        catch (err) {
+            alert('오류가 발생했습니다. 다시 시도해 주세요.')
+        }
+    }
     return {
         subscribe,
         fetchArticles,
@@ -229,6 +282,8 @@ const setArticles = () => {
         deleteArticle,
         increArticleCommentCount,
         decreArticleCommentCount,
+        likeArticle,
+        cancelLikeArticle,
     }
 }
 
