@@ -2,6 +2,7 @@
   export let comment;
   export let articleId;
   import { comments, auth } from "../stores";
+  import dateView from "../utils/date";
 
   const onDeleteComment = () => {
     if (confirm("삭제하겠습니까?")) {
@@ -15,7 +16,7 @@
   <div class="comment-top">
     <div class="comment-top-left">
       <p class="p-user">{comment.userEmail}</p>
-      <p class="p-date-comment">{comment.createdAt}</p>
+      <p class="p-date-comment">{dateView(comment.createdAt)}</p>
     </div>
     <div class="comment-top-right">
       <button on:click={onDeleteComment}>

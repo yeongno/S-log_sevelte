@@ -1,14 +1,11 @@
 <script>
   // @ts-nocheck
 
-  function handleClick() {
-    window.location.href = "#"; // 원하는 URL로 변경
-  }
-
   export let article;
   import { articles, auth, isLogin } from "../stores";
   import ArticleEditForm from "./ArticleEditForm.svelte";
   import { router } from "tinro";
+  import dateView from "../utils/date";
 
   let isViewMenu = false;
 
@@ -63,7 +60,7 @@
     <div class="content-box-header">
       <div class="content-box-header-inner-left">
         <p class="p-user">{article.userEmail}</p>
-        <p class="p-date">{article.createdAt}</p>
+        <p class="p-date">{dateView(article.createdAt)}</p>
       </div>
       <div class="content-box-header-inner-right">
         {#if article.userId === $auth.id}
@@ -141,11 +138,7 @@
         {/if}
       </div>
       <div class="button-box-inner-right">
-        <button
-          on:click={handleClick}
-          class="flex"
-          on:click={() => goComment(article.id)}
-        >
+        <button class="flex" on:click={() => goComment(article.id)}>
           <p class="text-base">{article.commentCount}</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
