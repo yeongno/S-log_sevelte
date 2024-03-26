@@ -1,6 +1,7 @@
 import { writable, get, derived } from 'svelte/store'
 import {getApi, putApi, delApi, postApi} from '../service/api.js'
 import { router } from 'tinro'
+import { ALL, LIKE, MY } from '../utils/constant.js'
 
 const setCurrentArticlesPage = () => {
     const { subscribe, update, set } = writable(1)
@@ -31,7 +32,24 @@ const setArticles = () => {
 
         loadingArticle.turnOnLoading()
         const currentPage = get(currentArticlesPage)
-        let path = `/articles/?pageNumber=${currentPage}`
+        // let path = `/articles/?pageNumber=${currentPage}`
+        let path = ''
+        const mode = get(articlesMode)
+        
+        switch (mode) {
+            case ALL:
+                path = `/articles/?pageNumber=${currentPage}`
+                break
+            case LIKE:
+                path = `/likes/?pageNumber=${currentPage}`
+                break
+            case MY:
+                path = `/articles/?pageNumber=${currentPage}&mode=${mode}`
+                break
+            default:
+                path = `/articles/${currentPage}`
+                break
+        }
 
         try {
             const access_token = get(auth).Authorization
@@ -432,18 +450,18 @@ const setAuth = () => {
     }
     
     //해당 스토어를 리셋
-    const resetUserInfo = async () => { 
-        try {
-            const authenticationUser = await postApi({ path: '/auth/refresh' })
-            set(authenticationUser)
-            isRefresh.set(true)
-        }
-        catch (err) {
-            auth.resetUserInfo()
-            isRefresh.set(false)
-        }
-    }
-    
+    // const resetUserInfo = async () => { 
+    //     try {
+    //         const authenticationUser = await postApi({ path: '/auth/refresh' })
+    //         set(authenticationUser)
+    //         isRefresh.set(true)
+    //     }
+    //     catch (err) {
+    //         auth.resetUserInfo()
+    //         isRefresh.set(false)
+    //     }
+    // }
+    const resetUserInfo = () => set({...initValues})
     const login = async (email, password) => {
         try {
             const options = {
@@ -453,11 +471,16 @@ const setAuth = () => {
                     pwd: password,
                 }
             }
-
             const result = await postApi(options)
+            if (result) {
             set(result)
             isRefresh.set(true)
             router.goto('/articles')
+            }
+            else {
+                alert("이메일 또는 비밀번호가 일치하지 않습니다.")
+            }
+
         }
         catch (err) {
             alert('오류가 발생했습니다. 로그인을 다시시도해 주세요.')
@@ -472,12 +495,12 @@ const setAuth = () => {
             await delApi(options)
             set({ ...initValues })
             isRefresh.set(false)
-            router.goto('/')
+            // router.goto('/')
+            articlesMode.changeMode(ALL)
         }
         catch (err) {
             alert('오류가 발생했습니다. 다시시도해 주세요')
         }
-
     }
     const register = async (email, pwd) => { 
         try {
@@ -509,7 +532,18 @@ const setAuth = () => {
 }
 
 const setArticlesMode = () => {
+    const { subscribe, update, set } = writable(ALL)
     
+    const changeMode = async (mode) => {
+        set(mode)
+        articles.resetArticles()
+        await articles.fetchArticles()
+    }
+
+    return {
+        subscribe,
+        changeMode,
+    }
 }
 
 const setIsLogin = () => {

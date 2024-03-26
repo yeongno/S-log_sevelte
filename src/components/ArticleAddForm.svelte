@@ -1,5 +1,8 @@
 <script>
   import { articles } from "../stores";
+  import { contentValidate, extractErrors } from "../utils/validates";
+
+  let errors = {};
 
   let values = {
     formContent: "",
@@ -7,10 +10,13 @@
 
   const onAddArticle = async () => {
     try {
+      await contentValidate.validate(values, { abortEarly: false });
       await articles.addArticle(values.formContent);
       onCancelAddArticle();
-    } catch (err) {
-      alert(err);
+    } catch (error) {
+      // alert(err);
+      errors = extractErrors(error);
+      if (errors.formContent) alert(errors.formContent);
     }
   };
 

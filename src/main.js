@@ -3,6 +3,7 @@ import "./styles/main.css";
 import App from "./App.svelte";
 import { auth } from "./stores"
 await auth.refresh()
+
 // (async () => {
 //     await auth.refresh();
 //     new App({

@@ -6,6 +6,9 @@
   import { onMount } from "svelte";
   import { router, meta } from "tinro";
   import { articleContent, comments, isLogin } from "../stores";
+  import { extractErrors, contentValidate } from "../utils/validates";
+
+  let errors = {};
 
   const route = meta();
   const articleId = Number(route.params.id);
@@ -22,8 +25,14 @@
   const goArticles = () => router.goto(`/articles`);
 
   const onAddComment = async () => {
-    await comments.addComment(articleId, values.formContent);
-    values.formContent = "";
+    try {
+      await contentValidate.validate(values, { abortEarly: false });
+      await comments.addComment(articleId, values.formContent);
+      values.formContent = "";
+    } catch (error) {
+      errors = extractErrors(error);
+      if (errors.formContent) alert(errors.formContent);
+    }
   };
 </script>
 
