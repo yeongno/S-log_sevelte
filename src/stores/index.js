@@ -73,7 +73,9 @@ const setArticles = () => {
                 }
                 else {
                     const newArticles = [...datas.articleList, ...newData.articleList]
-                    datas.articleList = newArticles
+                    // datas.articleList = newArticles
+                    const uniqueArr = newArticles.filter((arr, index, callback) => index === callback.findIndex(t => t.id === arr.id))
+                    datas.articleList = uniqueArr
                     datas.totalPageCount = newData.totalPageCount
                 }
 
@@ -475,7 +477,7 @@ const setAuth = () => {
             if (result) {
             set(result)
             isRefresh.set(true)
-            router.goto('/articles')
+            router.goto('/articles/all')
             }
             else {
                 alert("이메일 또는 비밀번호가 일치하지 않습니다.")

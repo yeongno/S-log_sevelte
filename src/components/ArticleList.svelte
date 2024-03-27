@@ -8,14 +8,19 @@
     currentArticlesPage,
     loadingArticle,
     articlePageLock,
+    articlesMode,
   } from "../stores";
   import ArticleLoading from "./ArticleLoading.svelte";
+  import { router } from "tinro";
 
   let component;
   let element;
+  let currentMode = $router.path.split("/")[2];
+
   onMount(() => {
-    articles.resetArticles();
-    articles.fetchArticles();
+    // articles.resetArticles();
+    // articles.fetchArticles();
+    articlesMode.changeMode(currentMode);
   });
 
   $: {

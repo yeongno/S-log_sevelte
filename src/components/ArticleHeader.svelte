@@ -5,16 +5,13 @@
   import { auth, isLogin, articlesMode } from "../stores";
   import { ALL, LIKE, MY } from "../utils/constant";
 
-  const goLogin = () => router.goto("login");
+  const goLogin = () => router.goto("/login");
   const onLogout = () => auth.logout();
 
   const onChangeMode = (mode) => {
-    if ($articlesMode !== mode) articlesMode.changeMode(mode);
+    // if ($articlesMode !== mode) articlesMode.changeMode(mode);
+    if ($articlesMode !== mode) router.goto(`/articles/${mode}`);
   };
-
-  function handleClick() {
-    window.location.href = "#"; // 원하는 URL로 변경
-  }
 </script>
 
 <!-- start header -->
@@ -44,7 +41,7 @@
   </nav>
   {#if $isLogin}
     <!-- 로그아웃  -->
-    <button href="#" class="text-white" on:click={onLogout}>
+    <button class="text-white" on:click={onLogout}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -58,7 +55,7 @@
     </button>
   {:else}
     <!--로그인 -->
-    <button on:click={handleClick} class="text-white" on:click={goLogin}>
+    <button class="text-white" on:click={goLogin}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
